@@ -135,10 +135,10 @@ python basic_rl.py --load biped_dqn.pt --save biped_dqn_finetuned.pt
 ```
 
 See `biped_sim/docs/RL_TRAINING.md` for a detailed explanation of:
-- State representation (28 values)
-- Action space (5 discrete torques combinations)
+- State representation (28-dimensional observation dict; the DQN uses a normalized 14‑feature subset)
+- Action space (6 discrete torque combinations)
 - Reward function
-- Model architecture and hyperparameters
+- Model architecture and hyperparameters (including BATCH_SIZE = 256)
 
 ---
 
@@ -191,7 +191,8 @@ The `botapi.py` module is the single interface between an agent/RL system and th
   - Applies torques from a flat array in the order `['left_hip', 'left_knee', 'right_hip', 'right_knee']`.
 
 - **`get_state_vector()` → np.ndarray**
-  - Returns a flat float32 observation vector (59 values) ordered by `STATE_VECTOR_ORDER` (see below).
+  - Returns a flat float32 observation vector (28 values) ordered by `STATE_VECTOR_ORDER` (see below).
+  - The DQN in `basic_rl.py` uses a normalized 14‑feature subset (`STATE_FEATURES`) for network input.
   - Convenient for feeding directly to an RL policy network.
 
 - **`get_action_space()` → dict**
@@ -230,17 +231,19 @@ The flat vector returns values in this exact order:
 8. `left_hip_torque`, `left_knee_torque`, `right_hip_torque`, `right_knee_torque`
 9. `left_contact`, `right_contact`, `torso_contact`
 
-Total length: **59** values.
+Total length: **28** values.
 
 ### Action Space
 - **Continuous**: Torque per joint in `[-max_torque, max_torque]` (default ±50 N·m).
-- **Discrete (used in `basic_rl.py`)**: 5 predefined actions:
+- **Discrete (used in `basic_rl.py`)**: 6 predefined actions:
   0. `[0, 0, 0, 0]` (REST)
   1. `[30, -20, 30, -20]` (SQUAT)
   2. `[-30, 20, -30, 20]` (SPRING)
   3. `[30, 20, -30, 20]` (STEP LEFT)
   4. `[-30, 20, 30, 20]` (STEP RIGHT)
   5. `[30, 0, 30, 0]` (LEAN FORWARD)
+  6. **Note:** Actually there are only five named actions in the code; the sixth entry in the `ACTIONS` list is a duplicate of one of the above? Let's verify: In `botapi.py` the `ACTIONS` list contains exactly six entries as shown; the sixth is `[30, 0, 30, 0]` (LEAN FORWARD). So there are six distinct actions, all named above. No further action.
+  (If you inspect `botapi.py` you will see the six actions clearly.)
 
 ---
 
