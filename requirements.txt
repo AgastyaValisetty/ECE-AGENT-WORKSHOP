@@ -1,0 +1,17 @@
+# Requirements for 2D Biped Physics Simulation
+# Agentic AI + ECE Workshop
+
+# Core dependencies
+numpy>=1.20.0
+torch>=1.9.0
+
+# Physics engine
+pymunk>=6.7.0
+
+# Visualization
+pygame>=2.0.0
+
+# Testing
+unittest-xml-reporting>=3.0.0  # optional, for test reports
+
+# Note: unittest is part of Python standard library, no installation needed
