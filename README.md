@@ -47,8 +47,6 @@ The project provides:
 │   └── tests/                 # Unit tests for the simulation and API
 ├── requirements.txt           # Core dependencies (numpy, torch, pymunk, pygame)
 ├── biped_dqn.pt               # Pretrained walking policy (from basic_rl.py)
-├── heads_up_biped_dqn.pt      # Alternate pretrained policy (from heads_up_rl.py)
-├── heads_up_rl.py             # Alternative RL training script (see comments)
 └── README.md                  # This file
 ```
 
